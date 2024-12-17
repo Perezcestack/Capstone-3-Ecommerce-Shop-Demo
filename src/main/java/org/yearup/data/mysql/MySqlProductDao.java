@@ -45,7 +45,6 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setBigDecimal(6, maxPrice);
             statement.setString(7, color);
             statement.setString(8, color);
-
             ResultSet row = statement.executeQuery();
 
             while (row.next())
