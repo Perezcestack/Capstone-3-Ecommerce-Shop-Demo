@@ -19,7 +19,7 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
     }
 
     @Override
-    public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color)
+    public List<Product> search(Integer categoryId, BigDecimal minPrice, BigDecimal maxPrice, String color, String name)
     {
         List<Product> products = new ArrayList<>();
 
@@ -27,11 +27,13 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
                 "WHERE (category_id = ? OR ? = -1) " +
                 "   AND (price >= ? OR ? = -1) " +
                 "   AND (price <= ? OR ? = -1) " +
-                "   AND (color = ? OR ? = '') ";
+                "   AND (color = ? OR ? = '') " +
+                "   AND (name = ? OR ? = '') ";
 
         categoryId = categoryId == null ? -1 : categoryId;
         minPrice = minPrice == null ? new BigDecimal("-1") : minPrice;
         maxPrice = maxPrice == null ? new BigDecimal("-1") : maxPrice;
+        name =(name == null) ? "": name;
         color = color == null ? "" : color;
 
         try (Connection connection = getConnection())
@@ -45,6 +47,8 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
             statement.setBigDecimal(6, maxPrice);
             statement.setString(7, color);
             statement.setString(8, color);
+            statement.setString(9, name);
+            statement.setString(10, name);
             ResultSet row = statement.executeQuery();
 
             while (row.next())
@@ -59,6 +63,32 @@ public class MySqlProductDao extends MySqlDaoBase implements ProductDao
         }
 
         return products;
+
+    }
+    @Override
+    public List<Product> getByName(String name) {
+        {
+            List<Product> products = new ArrayList<>();
+
+            String sql = "SELECT * FROM products " +
+                    " WHERE name = ? ";
+
+            try (Connection connection = getConnection()) {
+                PreparedStatement statement = connection.prepareStatement(sql);
+                statement.setString(1, name);
+
+                ResultSet row = statement.executeQuery();
+
+                while (row.next()) {
+                    Product product = mapRow(row);
+                    products.add(product);
+                }
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+
+            return products;
+        }
     }
 
     @Override
