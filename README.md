@@ -5,7 +5,7 @@ learned to implement Java and this time JDBC SQL and other methods to make a pro
 You will need Java 17 and Spring boot to run the backend for this program. I used a local
 host for the front end of this program via VScode.
 ---
-Picture of Homescreen![](images/HomeScreen.Png)
+Picture of Homescreen![](images/HomeScreen.PNG)
 ---
 Favorite Code Block
 ```
