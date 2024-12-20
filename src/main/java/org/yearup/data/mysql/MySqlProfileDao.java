@@ -9,21 +9,17 @@ import javax.sql.DataSource;
 import java.sql.*;
 
 @Component
-public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
-{
-    public MySqlProfileDao(DataSource dataSource)
-    {
+public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao {
+    public MySqlProfileDao(DataSource dataSource) {
         super(dataSource);
     }
 
     @Override
-    public Profile create(Profile profile)
-    {
+    public Profile create(Profile profile) {
         String sql = "INSERT INTO profiles (user_id, first_name, last_name, phone, email, address, city, state, zip) " +
                 " VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try(Connection connection = getConnection())
-        {
+        try (Connection connection = getConnection()) {
             PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setInt(1, profile.getUserId());
             ps.setString(2, profile.getFirstName());
@@ -38,9 +34,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             ps.executeUpdate();
 
             return profile;
-        }
-        catch (SQLException e)
-        {
+        } catch (SQLException e) {
             throw new RuntimeException(e);
         }
     }
@@ -87,12 +81,12 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             statement.setString(6, profile.getCity());
             statement.setString(7, profile.getState());
             statement.setString(8, profile.getZip());
-            statement.setInt(9,UserId);
+            statement.setInt(9, UserId);
 
             int rowsAffected = statement.executeUpdate();
-            if (rowsAffected == 0){
+            if (rowsAffected == 0) {
                 System.out.println("No profile was updated");
-            }else {
+            } else {
                 System.out.println("Profile was updated : rows affected = " + rowsAffected);
             }
 
@@ -100,6 +94,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
             throw new RuntimeException(e);
         }
     }
+
     private Profile mapRow(ResultSet row) throws SQLException {
         int userId = row.getInt("user_id");
         String firstName = row.getString("first_name");
@@ -111,7 +106,7 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
         String state = row.getString("state");
         String zip = row.getString("zip");
 
-        Profile profile = new Profile(){
+        Profile profile = new Profile() {
             {
                 setUserId(userId);
                 setFirstName(firstName);
@@ -122,7 +117,8 @@ public class MySqlProfileDao extends MySqlDaoBase implements ProfileDao
                 setCity(city);
                 setState(state);
                 setZip(zip);
-            }};
+            }
+        };
 
         return profile;
     }
